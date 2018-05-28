@@ -18,11 +18,11 @@ In this research, we explore several aspect of UFO sightings data using various 
 
 ### Process Diagram
 
-![Process Diagram](figure/figure\ 1.png)
+![Process Diagram](figure/figure_1.png)
 
 ### UFO Sightings Density
 
-![UFO Sightings Density](figure/figure 2.png)
+![UFO Sightings Density](figure/figure_2.png)
 
 ### Resources
 
@@ -43,15 +43,15 @@ We implement some technique to extract useful information from unstructured data
 
 ### UFO Sighting Reports
 
-![UFO Sighting Report](figure/figure 3.png)
+![UFO Sighting Report](figure/figure_3.png)
 
 ### Reported UFO Images
 
-![Reported UFO Images](figure/figure 4.png)
+![Reported UFO Images](figure/figure_4.png)
 
 ### Image Captioning Results
 
-![Image Captioning Results](figure/figure 5.png)
+![Image Captioning Results](figure/figure_5.png)
 
 ### Resources
 
@@ -65,11 +65,11 @@ In this module, we try to apprehend the UFO sighting data using several visualiz
 
 ### NER Location Word Cloud
 
-![NER Location Word Cloud](figure/figure 6.png)
+![NER Location Word Cloud](figure/figure_6.png)
 
 ### ImageSpace Query
 
-![ImageSpace Query](figure/figure 7.png)
+![ImageSpace Query](figure/figure_7.png)
 
 ### Resources
 
