@@ -26,7 +26,7 @@ In this research, we explore several aspect of UFO sightings data using various 
 
 ### Resources
 
-* [Analytical Report](report/Analysis-of-Structured-UFO-Sightings-Data.pdf) - Analysis of Structured UFO Sightings Data Documentation
+* [Analytical Report](report/Analysis%20of%20Structured%20UFO%20Sightings%20Data.pdf) - Analysis of Structured UFO Sightings Data Documentation
 
 <a name="2"></a>
 
