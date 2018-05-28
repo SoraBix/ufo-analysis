@@ -18,7 +18,7 @@ In this research, we explore several aspect of UFO sightings data using various 
 
 ### Process Diagram
 
-![Process Diagram](figure/figure 1.png)
+![Process Diagram](figure/figure\ 1.png)
 
 ### UFO Sightings Density
 
