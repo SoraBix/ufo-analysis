@@ -55,7 +55,7 @@ We implement some technique to extract useful information from unstructured data
 
 ### Resources
 
-* [Analytical Report](report/Analysis of Unstructured UFO Sightings Data.pdf) - Analysis of Unstructured UFO Sightings Data Documentation
+* [Analytical Report](report/Analysis%20of%20Unstructured%20UFO%20Sightings%20Data.pdf) - Analysis of Unstructured UFO Sightings Data Documentation
 
 <a name="3"></a>
 
@@ -73,7 +73,7 @@ In this module, we try to apprehend the UFO sighting data using several visualiz
 
 ### Resources
 
-* [Analytical Report](report/Creating UFO Data Insights.pdf) - Creating UFO Data Insights Documentation
+* [Analytical Report](report/Creating%20UFO%20Data%20Insights.pdf) - Creating UFO Data Insights Documentation
 
 ## Developers
 
