@@ -10,6 +10,12 @@ This research divided into 3 major module, each try to handle different problem 
 * [Analysis of Unstructured UFO Sightings Data](#2)
 * [Creating UFO Data Insights](#3)
 
+### Analytical Report
+
+* [Report 1 : Analysis of Structured UFO Sightings Data](report/Analysis%20of%20Structured%20UFO%20Sightings%20Data.pdf)
+* [Report 2 : Analysis of Unstructured UFO Sightings Data](report/Analysis%20of%20Unstructured%20UFO%20Sightings%20Data.pdf)
+* [Report 3 : Creating UFO Data Insights](report/Creating%20UFO%20Data%20Insights.pdf)
+
 <a name="1"></a>
 
 ## Analysis of Structured UFO Sightings Data
