@@ -1,0 +1,62 @@
+{
+    "children": [
+        {
+            "children": [
+                {
+                    "name": "rainy",
+                    "size": 200
+                },
+                {
+                    "name": "dist_to_military_base",
+                    "size": 200
+                },
+                {
+                    "name": "snowy",
+                    "size": 200
+                },
+                {
+                    "name": "dusty",
+                    "size": 200
+                },
+                {
+                    "name": "countyName",
+                    "size": 200
+                },
+                {
+                    "name": "dist_to_airport",
+                    "size": 200
+                },
+                {
+                    "name": "state",
+                    "size": 200
+                },
+                {
+                    "name": "windy",
+                    "size": 200
+                },
+                {
+                    "name": "military_component",
+                    "size": 200
+                },
+                {
+                    "name": "airport_type",
+                    "size": 200
+                },
+                {
+                    "name": "sighted_at",
+                    "size": 200
+                },
+                {
+                    "name": "military_area",
+                    "size": 200
+                },
+                {
+                    "name": "population",
+                    "size": 200
+                }
+            ],
+            "name": "cluster0"
+        }
+    ],
+    "name": "clusters"
+}
