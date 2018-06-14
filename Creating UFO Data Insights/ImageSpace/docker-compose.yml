@@ -1,0 +1,116 @@
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+version: "2"
+services:
+  imagespace-mongo:
+    image: mongo:3.1
+    command: --smallfiles
+    networks:
+      - imagespace-network
+  # imagespace-solr:
+  #   image: solr:6.0
+  #   ports:
+  #     - "8983:8983"
+  #   networks:
+  #     - imagespace-network
+  #   entrypoint:
+  #     - docker-entrypoint.sh
+  #     - solr-precreate
+  #     - imagespace
+  imagespace-girder:
+    image: my_image_space
+    networks:
+      - imagespace-network
+    ports:
+      - "8989:8989"
+    depends_on:
+      - imagespace-mongo
+      - imagecat
+    volumes:
+      - /c/workspace/csci599/hw3/repo/imagecat-DOCKER/images:/images
+      - /c/workspace/csci599/hw3/repo/imagecat-DOCKER/staging/roxy-image-list-jpg-nonzero.txt:/girder/image_space/flann_index/listing.txt
+    entrypoint: /imagespace-entrypoint.sh --database mongodb://imagespace-mongo/girder
+  imagecat:
+    container_name: imagecat_container
+    image: imagecat
+    ports:
+      - 8000:8000
+      - 8080:8080
+      - 8081:8081
+      - 8088:8088
+    volumes:
+      - /c/workspace/csci599/hw3/repo/imagecat-DOCKER/images:/images
+      - /c/workspace/csci599/hw3/repo/imagecat-DOCKER/staging:/deploy/data/staging/
+    networks:
+      - imagespace-network
+  smqtk-postgres:
+    container_name: smqtk_postgres
+    image: postgres:smqtk
+    networks:
+      - imagespace-network
+  smqtk-server:
+    container_name: smqtk_container
+    image: kitware/smqtk
+    command: -b
+    ports:
+      - 12345:12345
+      - 12346:12346
+    volumes:
+      - /c/workspace/csci599/hw3/repo/imagecat-DOCKER/someimages:/data
+    depends_on:
+      - smqtk-postgres
+    networks:
+      - imagespace-network
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - imagespace-network
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    container_name: elasticsearch2
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+    networks:
+      - imagespace-network
+networks:
+  imagespace-network:
+    driver: bridge
+volumes:
+  esdata1:
+    driver: local
+  esdata2:
+    driver: local
