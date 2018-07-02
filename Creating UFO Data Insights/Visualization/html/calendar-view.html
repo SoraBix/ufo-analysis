@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+    <script>
+        var SOLR_URL = 'http://localhost/solr/ufo';
+    </script>
+</head>
+
+
+
+
+<body>
+    <center>
+        <h2>Calendar Representation of UFO Sightings</h2>
+        <div id="colorbar"></div>
+        <div id="content">
+        </div>
+    </center>
+    <div class="container">
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog modal-lg">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Query Top 10 Results for
+                                <span id="query-date"></span>
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <b>API URL: </b>
+                                <span id="query-url"></span>
+                            </div>
+                            <pre id="response-content">
+    
+                </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+        var width = 960,
+            height = 136,
+            cellSize = 17;
+
+        var formatPercent = d3.format(".1%");
+
+        var color = d3.scaleQuantize()
+            .domain([0, 1])
+            .range(["#FFFFFF", "#D8F0D2", "#D1EECA", "#CAEBC2", "#C3E8BA", "#BCE6B2", "#B5E3AA", "#ADE1A1", "#A6DE99", "#A3DD95", "#9FDB91", "#9CDA8D", "#98D989", "#95D785", "#91D681", "#8ED57D", "#8AD479", "#87D275", "#83D171", "#80D06D", "#7CCE69", "#79CD65", "#75CC61", "#72CA5D", "#6EC959", "#6BC855", "#67C750", "#63C54C", "#60C448", "#5CC344", "#59C140", "#55C03C", "#52BF38", "#4EBD34", "#4BBC30", "#47BB2C", "#44BA28", "#40B824", "#3DB720", "#39B61C", "#36B418", "#32B314", "#2FB210", "#2BB00C", "#28AF08", "#24AE04", "#21AD00", "#21AD00", "#20AB00", "#20A900", "#1FA700", "#1FA500", "#1FA300", "#1EA100", "#1EA000", "#1E9E00", "#1D9C00", "#1D9A00", "#1D9800", "#1C9600", "#1C9400", "#1C9300", "#1B9100", "#1B8F00", "#1B8D00", "#1A8B00", "#1A8900", "#1A8700", "#198600", "#198400", "#188200", "#188000", "#187E00", "#177C00", "#177A00", "#177900", "#167700", "#167500", "#167300", "#157100", "#156F00", "#156D00", "#146C00", "#146A00", "#146800", "#136600", "#136400", "#136200", "#126000", "#125F00", "#115D00", "#115B00", "#115900", "#105700", "#105500", "#105300", "#0F5200", "#0F5000", "#0F4E00", "#0E4C00", "#0E4A00", "#0E4800", "#0D4600", "#0D4500", "#0D4300", "#0C4100", "#0C3F00", "#0C3D00", "#0B3B00", "#0B3900", "#0B3800"]);
+
+        var svg = d3.select("#content")
+            .selectAll("svg")
+            .data(d3.range(1990, 2000))
+            .enter().append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
+
+        svg.append("text")
+            .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
+            .attr("font-family", "sans-serif")
+            .attr("font-size", 10)
+            .attr("text-anchor", "middle")
+            .text(function (d) { return d; });
+
+        var rect = svg.append("g")
+            .attr("fill", "none")
+            .attr("stroke", "#ccc")
+            .selectAll("rect")
+            .data(function (d) { return d3.timeDays(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+            .enter().append("rect")
+            .attr("width", cellSize)
+            .attr("height", cellSize)
+            .attr("x", function (d) { return d3.timeWeek.count(d3.timeYear(d), d) * cellSize; })
+            .attr("y", function (d) { return d.getDay() * cellSize; })
+            .datum(d3.timeFormat("%Y%m%d"));
+
+        svg.append("g")
+            .attr("fill", "none")
+            .attr("stroke", "#000")
+            .selectAll("path")
+            .data(function (d) { return d3.timeMonths(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+            .enter().append("path")
+            .attr("d", pathMonth);
+        retrieveData()
+        function generateViz(count_arr) {
+            max_count = 0.0
+            for (var i = 0; i < count_arr.length; i++) {
+                if (count_arr[i].count > max_count) {
+                    console.log(count_arr[i].sighted_at)
+                    max_count = count_arr[i].count
+                }
+            }
+            var data = d3.nest()
+                .key(function (d) { return d.sighted_at; })
+                .rollup(function (d) { return (d[0].count) })
+                .object(count_arr);
+
+            rect.filter(function (d) { return d in data; })
+                .attr("fill", function (d) { return color(data[d] / max_count); })
+                .append("title")
+                .text(function (d) { return d + ": " + data[d]; });
+            rect.on("click", function (d) {
+                callSolr(d)
+                d3.event.stopPropagation();
+            });
+        };
+        function retrieveData() {
+            var api_url = SOLR_URL + "/select?fl=sighted_at&q=*:*&rows=100000"
+            $.get(api_url, function (res) {
+                var count_by_date = {}
+                var docs = res.response.docs
+                var count_by_date = docs.reduce(function (sums, entry) {
+                    if (!!entry.sighted_at) {
+                        sums[entry.sighted_at] = (sums[entry.sighted_at] || 0) + 1;
+                    }
+                    return sums;
+                }, {});
+                count_arr = []
+                for (var k in count_by_date) {
+                    if (count_by_date.hasOwnProperty(k)) {
+
+                        count_arr.push({ sighted_at: k, count: count_by_date[k] })
+                    }
+                }
+                generateViz(count_arr)
+            });
+        }
+        function callSolr(dateStr) {
+            // var date = new Date(d);
+            // var dateStr = moment(date).format('YYYYMMDD');
+            var api_url = SOLR_URL + "/select?q=sighted_at:" + dateStr;
+            $('#query-date').text(dateStr)
+            $('#query-url').text(api_url)
+            $.get(api_url, function (res) {
+                console.log(res)
+                renderModal(res.response)
+            });
+        }
+        function renderModal(data) {
+            $('#response-content').html(syntaxHighlight(data))
+            $("#myModal").modal()
+        }
+        function pathMonth(t0) {
+            var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
+                d0 = t0.getDay(), w0 = d3.timeWeek.count(d3.timeYear(t0), t0),
+                d1 = t1.getDay(), w1 = d3.timeWeek.count(d3.timeYear(t1), t1);
+            return "M" + (w0 + 1) * cellSize + "," + d0 * cellSize
+                + "H" + w0 * cellSize + "V" + 7 * cellSize
+                + "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize
+                + "H" + (w1 + 1) * cellSize + "V" + 0
+                + "H" + (w0 + 1) * cellSize + "Z";
+        }
+        function syntaxHighlight(json) {
+            if (typeof json != 'string') {
+                json = JSON.stringify(json, undefined, 2);
+            }
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+    </script>
+    <script>
+        // generate color range bar
+        tmp = "<span>No Sighting&nbsp;</span>"
+        for (var i = 0; i <= 100; i++) {
+            hex = color(i / 100);
+            tmp += '<span style="background-color:' + hex + '">&nbsp;</span>'
+        }
+        $("#colorbar").html(tmp + "<span>&nbsp; Lot Sightings</span>")
+    </script>
+    
+</body>
+
+</html>
