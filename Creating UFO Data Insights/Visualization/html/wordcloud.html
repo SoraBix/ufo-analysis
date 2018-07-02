@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>CSCI599: Content Detection and Analysis for Big Data</title>
+    <meta charset="UTF-8">
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="../js/d3.layout.cloud.js"></script>
+    <script src="../js/wordcloud_d3.js"></script>
+    <script src="../js/words.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+  </head>
+  <body style="text-align: center">
+    <center>
+      <h2>NER Location Word Cloud</h2>
+      <div id='wordcloud'></div>
+      <script>
+        d3.wordcloud()
+          .size([1500, 900])
+          .fill(d3.scale.ordinal().range(["#884400", "#448800", "#888800", "#444400"]))
+          .words(words)
+          .onwordclick(function(d, i) {
+            if (d.href) { window.location = d.href; }
+          })
+          .start();
+      </script>
+    </center>
+  </body>
+</html>
+
